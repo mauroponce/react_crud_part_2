@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
+import { connect } from 'react-redux';
+import { fetchEmployees } from './actions/employees';
 import { Employee } from './utils/api';
+import './App.css';
 import EmployeeRow from './components/EmployeeRow';
 import EmployeeFormModal from './components/EmployeeFormModal';
 import DeleteEmployeeFormModal from './components/DeleteEmployeeFormModal'
@@ -17,10 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    Employee.all()
-      .then(res => {
-        this.setState({ employees: res.data })
-      })
+    this.props.fetchEmployees();
   }
 
   deleteEmployee(e) {
@@ -55,7 +54,8 @@ class App extends Component {
   }
 
   render() {
-    const { employees } = this.state;
+    // const { employees } = this.state; //BEFORE
+    const { employees } = this.props; // NOW
 
     return (
       <React.Fragment>
@@ -129,4 +129,13 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    employees: state.employees
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  { fetchEmployees }
+)(App);
