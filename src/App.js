@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchEmployees } from './actions/employees';
+import { fetchEmployees, createEmployee } from './actions/employees';
 import { Employee } from './utils/api';
 import './App.css';
 import EmployeeRow from './components/EmployeeRow';
@@ -11,7 +11,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      employees: [],
       addModalIsOpen: false,
       editEmployee: null,
       deleteEmployeeID: false,
@@ -33,11 +32,9 @@ class App extends Component {
   }
 
   createEmployee(employee) {
-    Employee.create(employee)
-      .then(res => {
-        employee["id"] = res.data.id; // add incremental id assigned by server
-        const employees = [...this.state.employees, employee];
-        this.setState({ employees, addModalIsOpen: false })
+    this.props.createEmployee(employee)
+      .then(() => {
+        this.setState({ addModalIsOpen: false })
       });
   }
 
@@ -137,5 +134,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { fetchEmployees }
+  { fetchEmployees, createEmployee }
 )(App);
