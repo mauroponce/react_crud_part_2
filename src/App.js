@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchEmployees, createEmployee } from './actions/employees';
+import {
+  fetchEmployees,
+  createEmployee,
+  deleteEmployee
+} from './actions/employees';
 import { Employee } from './utils/api';
 import './App.css';
 import EmployeeRow from './components/EmployeeRow';
@@ -23,11 +27,10 @@ class App extends Component {
 
   deleteEmployee(e) {
     e.preventDefault();
-    const id = parseInt(e.target.elements['id'].value);
-    Employee.delete(id)
+    const employeeId = parseInt(e.target.elements['id'].value);
+    this.props.deleteEmployee(employeeId)
       .then(() => {
-        const employees = this.state.employees.filter(employee => employee.id !== id);
-        this.setState({ employees, deleteEmployeeID: false })
+        this.setState({ deleteEmployeeID: false })
       });
   }
 
@@ -134,5 +137,9 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { fetchEmployees, createEmployee }
+  {
+    fetchEmployees,
+    createEmployee,
+    deleteEmployee
+  }
 )(App);
