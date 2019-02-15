@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import {
   fetchEmployees,
   createEmployee,
-  deleteEmployee
+  deleteEmployee,
+  updateEmployee
 } from './actions/employees';
-import { Employee } from './utils/api';
 import './App.css';
 import EmployeeRow from './components/EmployeeRow';
 import EmployeeFormModal from './components/EmployeeFormModal';
@@ -42,15 +42,8 @@ class App extends Component {
   }
 
   updateEmployee(employee) {
-    Employee.update(employee)
-      .then(res => {
-        const updatedEmployee = res.data;
-        const employees = this.state.employees.map(employee => {
-          if (employee.id === updatedEmployee.id) return updatedEmployee
-          return employee;
-        })
-        this.setState({ employees, editEmployee: null })
-      });
+    this.props.updateEmployee(employee)
+      .then(() => this.setState({ editEmployee: null }));
   }
 
   render() {
@@ -90,7 +83,7 @@ class App extends Component {
                   <EmployeeRow employee={employee} key={employee.id}
                     onDeleteClick={() => this.setState({ deleteEmployeeID: employee.id })}
                     onEditClick={() => {
-                      const editEmployee = this.state.employees
+                      const editEmployee = this.props.employees
                         .find(obj => obj.id === employee.id);
                       this.setState({ editEmployee });
                     }}
@@ -140,6 +133,7 @@ export default connect(
   {
     fetchEmployees,
     createEmployee,
-    deleteEmployee
+    deleteEmployee,
+    updateEmployee
   }
 )(App);

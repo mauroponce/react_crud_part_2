@@ -2,11 +2,12 @@ import { Employee } from '../utils/api';
 export const EMPLOYEES_FETCHED = 'EMPLOYEES_FETCHED';
 export const EMPLOYEE_CREATED = 'EMPLOYEE_CREATED';
 export const EMPLOYEE_DELETED = 'EMPLOYEE_DELETED';
+export const EMPLOYEE_UPDATED = 'EMPLOYEE_UPDATED';
 
 export function employeesFetched(employees) {
   return {
     type: EMPLOYEES_FETCHED,
-    employees: employees
+    employees
   }
 }
 
@@ -23,7 +24,7 @@ export function fetchEmployees() {
 export function employeeCreated(employee) {
   return {
     type: EMPLOYEE_CREATED,
-    employee: employee
+    employee
   }
 }
 
@@ -31,8 +32,7 @@ export function createEmployee(employee){
   return dispatch => {
     return Employee.create(employee)
       .then(res => {
-        employee["id"] = res.data.id;
-        dispatch(employeeCreated(employee));
+        dispatch(employeeCreated(res.data));
       });
   };
 }
@@ -40,7 +40,7 @@ export function createEmployee(employee){
 export function employeeDeleted(employeeId) {
   return {
     type: EMPLOYEE_DELETED,
-    employeeId: employeeId
+    employeeId
   }
 }
 
@@ -51,4 +51,20 @@ export function deleteEmployee(id) {
         dispatch(employeeDeleted(id))
       });
   };
+}
+
+export function employeeUpdated(employee) {
+  return {
+    type: EMPLOYEE_UPDATED,
+    employee
+  }
+}
+
+export function updateEmployee(employee) {
+  return dispatch => {
+    return Employee.update(employee)
+      .then(res => {
+        dispatch(employeeUpdated(res.data))
+      })
+  }
 }
